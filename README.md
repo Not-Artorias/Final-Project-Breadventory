@@ -1,4 +1,3 @@
-Markdown
 #Breadventory: Bakery Management System
 
 > **Note:** This was a finals project for my **AppIntr** class at **DLS-CSB**. I developed this for my parents' bakery business as a proof of concept, and I plan to improve it as they scale larger.
