@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Breadventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --sidebar-bg: #1e293b;
+            --body-bg: #f8fafc;
+            --text-main: #334155;
+            --card-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--body-bg);
+            color: var(--text-main);
+        }
+
+        .register-card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .brand-logo {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--sidebar-bg);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: var(--primary-teal);
+                box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+            }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+            button:hover {
+                background-color: #0f766e;
+            }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+            .footer-text a {
+                color: var(--primary-teal);
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+                .footer-text a:hover {
+                    text-decoration: underline;
+                }
+
+        .error-message {
+            background-color: #fef2f2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <div class="brand-logo">Breadventory</div>
+        <h2>Create a new account</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}" placeholder="Choose a username" required>
+                {% for error in form.username.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                <input type="password" name="password1" id="id_password1" placeholder="••••••••" required>
+                {% for error in form.password1.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                <input type="password" name="password2" id="id_password2" placeholder="••••••••" required>
+                {% for error in form.password2.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Create Account</button>
+
+            <p class="footer-text">
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

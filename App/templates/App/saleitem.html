@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Items - Breadventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --sidebar-bg: #1e293b;
+            --body-bg: #f8fafc;
+            --text-main: #334155;
+            --border-color: #e2e8f0;
+            --danger-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: var(--body-bg);
+            color: var(--text-main);
+        }
+
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            padding: 30px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-brand {
+            padding: 0 25px 30px;
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar a.sidebar-brand:hover {
+            background-color: transparent !important;
+            color: white !important;
+            opacity: 0.8;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+            .sidebar a:hover {
+                background-color: #334155;
+                color: white;
+                border-left: 4px solid var(--primary-teal);
+            }
+
+        .content {
+            margin-left: 240px;
+            padding: 40px;
+            width: calc(100% - 240px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 15px;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        /* Status Styling */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: #f0fdf4;
+            color: #166534;
+        }
+
+        .status-voided {
+            background-color: #fef2f2;
+            color: #991b1b;
+            text-decoration: line-through;
+        }
+
+        .btn-void {
+            background-color: white;
+            color: var(--danger-red);
+            border: 1px solid #fecaca;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .btn-void:hover {
+                background-color: #fef2f2;
+            }
+
+        .back-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            padding: 10px 24px;
+            background-color: #f1f5f9;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+            .btn-secondary:hover {
+                background-color: #e2e8f0;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="{% url 'index' %}" class="sidebar-brand">Breadventory</a>
+        <a href="{% url 'product_create' %}">Add Product</a>
+        <a href="{% url 'product_list' %}">Manage Inventory</a>
+        <a href="{% url 'ingredients' %}">Ingredients</a>
+        <a href="{% url 'Saletable' %}" style="color: white; background: #334155; border-left: 4px solid var(--primary-teal);">Sales</a>
+        <div style="margin-top: auto;">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <header>
+            <h2>Receipt for Sale #{{ sale.id }}</h2>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sale_items %}
+                    <tr class="{% if item.is_voided %}row-voided{% endif %}">
+                        <td><strong>{{ item.product.name }}</strong></td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₱{{ item.product.price }}</td>
+                        <td>₱{{ item.subtotal }}</td>
+                        <td>
+                            {% if item.is_voided %}
+                            <span class="status-badge status-voided">Voided</span>
+                            {% else %}
+                            <span class="status-badge status-active">Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not item.is_voided %}
+                            <form method="POST" action="{% url 'void_sale_item' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-void">Void Item</button>
+                            </form>
+                            {% else %}
+                            <span style="color: #94a3b8; font-size: 0.85rem;">Permanently Voided</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">No items found in this transaction.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="back-container">
+            <a href="{% url 'Saletable' %}" class="btn-secondary">Back to Sales History</a>
+        </div>
+    </div>
+
+</body>
+</html>

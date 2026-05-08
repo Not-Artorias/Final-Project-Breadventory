@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredients - Breadventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --sidebar-bg: #1e293b;
+            --body-bg: #f8fafc;
+            --text-main: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: var(--body-bg);
+            color: var(--text-main);
+        }
+
+        /* Sidebar - Brand Consistency */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            padding: 30px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-brand {
+            padding: 0 25px 30px;
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar a.sidebar-brand:hover {
+            background-color: transparent !important;
+            color: white !important;
+            border-left: 4px solid transparent !important;
+            opacity: 0.8;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+            .sidebar a:hover {
+                background-color: #334155;
+                color: white;
+                border-left: 4px solid var(--primary-teal);
+            }
+
+        /* Content Area */
+        .content {
+            margin-left: 240px;
+            padding: 40px;
+            width: calc(100% - 240px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Table Design */
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 15px;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-add {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+            .btn-add:hover {
+                background-color: #0f766e;
+            }
+
+        .btn-edit {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+            .btn-edit:hover {
+                background-color: #e2e8f0;
+            }
+
+        .btn-delete {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+            .btn-delete:hover {
+                background-color: #fee2e2;
+            }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Stock Status */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="{% url 'index' %}" class="sidebar-brand">Breadventory</a>
+        <a href="{% url 'product_create' %}">Add Product</a>
+        <a href="{% url 'product_list' %}">Manage Inventory</a>
+        <a href="{% url 'ingredients' %}" style="color: white; background: #334155; border-left: 4px solid var(--primary-teal);">Ingredients</a>
+        <a href="{% url 'Saletable' %}">Sales</a>
+        <div style="margin-top: auto;">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <header>
+            <h2>Raw Ingredients</h2>
+            <a href="{% url 'ingredient_create' %}" class="btn btn-add">Add Ingredient</a>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingredient Name</th>
+                        <th>Stock Level</th>
+                        <th>Unit</th>
+                        <th>Expiration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingredient in ingredients %}
+                    <tr>
+                        <td><strong>{{ ingredient.name }}</strong></td>
+                        <td>
+                            <span class="badge">{{ ingredient.stock_qty }}</span>
+                        </td>
+                        <td>{{ ingredient.unit }}</td>
+                        <td>
+                            <span style="color: #64748b;">{{ ingredient.expiration_date|date:"M d, Y" }}</span>
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                <a href="{% url 'ingredient_update' ingredient.id %}" class="btn btn-edit">Edit</a>
+                                <a href="{% url 'ingredient_delete' ingredient.id %}" class="btn btn-delete" onclick="return confirm('Delete {{ ingredient.name }}?')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            No ingredients in stock.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

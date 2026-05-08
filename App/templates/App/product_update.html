@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product - Breadventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --sidebar-bg: #1e293b;
+            --body-bg: #f8fafc;
+            --text-main: #334155;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: var(--body-bg);
+            color: var(--text-main);
+        }
+
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            padding: 30px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand {
+            padding: 0 25px 30px;
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar a.sidebar-brand:hover {
+            background-color: transparent !important;
+            color: white !important;
+            border-left: 4px solid transparent !important;
+            opacity: 0.8;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+            .sidebar a:hover {
+                background-color: #334155;
+                color: white;
+                border-left: 4px solid var(--primary-teal);
+            }
+
+        .content {
+            margin-left: 240px;
+            padding: 40px;
+            width: calc(100% - 240px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .current-image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .button-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="{% url 'index' %}" class="sidebar-brand">Breadventory</a>
+        <a href="{% url 'product_create' %}">Add Product</a>
+        <a href="{% url 'product_list' %}">Product List</a>
+        <a href="{% url 'ingredients' %}">Ingredients</a>
+        <a href="{% url 'Saletable' %}">Sales</a>
+        <div style="margin-top: auto;">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-container">
+            <h2>Update {{ product.name }}</h2>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" name="name" id="name" value="{{ product.name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select name="category" id="category">
+                        <option value="Bread" {% if product.category == "Bread" %}selected{% endif %}>Bread</option>
+                        <option value="Pastry" {% if product.category == "Pastry" %}selected{% endif %}>Pastry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" rows="3" required>{{ product.description }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (₱)</label>
+                    <input type="number" name="price" id="price" step="0.01" value="{{ product.price }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock_qty">Stock Quantity</label>
+                    <input type="number" name="stock_qty" id="stock_qty" value="{{ product.stock_qty }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Image</label>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="current-image-preview" alt="Current image">
+                    {% else %}
+                    <p style="font-size: 0.8rem; color: #94a3b8;">No image currently uploaded.</p>
+                    {% endif %}
+                    <label for="image">Change Image</label>
+                    <input type="file" name="image" id="image" accept="image/*">
+                </div>
+
+                <div class="button-container">
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

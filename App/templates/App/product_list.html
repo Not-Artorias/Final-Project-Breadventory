@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Inventory - Breadventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --sidebar-bg: #1e293b;
+            --body-bg: #f8fafc;
+            --text-main: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: var(--body-bg);
+            color: var(--text-main);
+        }
+
+        /* Sidebar - Standardized across all pages */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            padding: 30px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-brand {
+            padding: 0 25px 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+            .sidebar a:hover {
+                background-color: #334155;
+                color: white;
+                border-left: 4px solid var(--primary-teal);
+            }
+
+        /* Main Content */
+        .content {
+            margin-left: 240px;
+            padding: 40px;
+            width: calc(100% - 240px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Modern Table Styling */
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 15px;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Stock Status Colors */
+        .stock-low {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .stock-ok {
+            color: #10b981;
+        }
+
+        /* Actions */
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+            .btn-edit:hover {
+                background-color: #e2e8f0;
+            }
+
+        .btn-delete {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+            .btn-delete:hover {
+                background-color: #fee2e2;
+            }
+
+        .btn-add {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 10px 20px;
+        }
+
+            .btn-add:hover {
+                background-color: #0f766e;
+            }
+
+        .sidebar-brand {
+            padding: 0 25px 30px;
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar a.sidebar-brand:hover {
+            background-color: transparent !important;
+            color: white !important;
+            border-left: 4px solid transparent !important;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="{% url 'index' %}" class="sidebar-brand">Breadventory</a>
+        <a href="{% url 'product_create' %}">Add Product</a>
+        <a href="{% url 'product_list' %}" style="color: white; background: #334155; border-left: 4px solid var(--primary-teal);">Manage Inventory</a>
+        <a href="{% url 'ingredients' %}">Ingredients</a>
+        <a href="{% url 'Saletable' %}">Sales</a>
+        <div style="margin-top: auto;">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <header>
+            <h2>Inventory Overview</h2>
+            <a href="{% url 'product_create' %}" class="btn btn-add">Add New Item</a>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td><strong>{{ product.name }}</strong></td>
+                        <td>{{ product.category }}</td>
+                        <td>₱{{ product.price }}</td>
+                        <td class="{% if product.stock_qty < 10 %}stock-low{% else %}stock-ok{% endif %}">
+                            {{ product.stock_qty }}
+                        </td>
+                        <td>
+                            <div class="button-group">
+                                <a href="{% url 'product_update' product.id %}" class="btn btn-edit">Edit</a>
+                                <a href="{% url 'product_delete' product.id %}" class="btn btn-delete" onclick="return confirm('Delete {{ product.name }}?')">Remove</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            No products in inventory.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
